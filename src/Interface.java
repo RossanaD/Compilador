@@ -119,18 +119,37 @@ public class Interface {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(file == null) {
-					
+					String filename = File.separator+"tmp";
+				    JFileChooser fc = new JFileChooser(new File(filename));
+				    fc.showSaveDialog(frame);
+				    File selFile = fc.getSelectedFile();
+				    FileWriter saida;
+					try {
+						saida = new FileWriter(selFile);
+						BufferedWriter fw = new BufferedWriter(saida);
+						fw.write(textArea.getText());
+						fw.close();
+						txtPastanomearquivo.setText(selFile.getAbsolutePath());
+						textArea_1.setText(null);	
+						file = fc.getSelectedFile();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+
 				}else {
 					 try {
 						FileWriter saida = new FileWriter(file);	
 						BufferedWriter fw = new BufferedWriter(saida);
 						fw.write(textArea.getText());
 						fw.close();
+						textArea_1.setText(null);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
+				
 			}
 		});
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
