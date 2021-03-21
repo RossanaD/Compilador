@@ -50,6 +50,7 @@ public class Interface {
 	 */
 	public Interface() {
 		initialize();
+		textArea.setBorder(new NumberedBorder());
 	}
 
 	/**
