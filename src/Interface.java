@@ -163,6 +163,7 @@ public class Interface {
 		btnNewButton_3.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\copie-o-simbolo-de-interface-de-duas-folhas-de-papel.png"));
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				textArea.copy();
 			}
 		});
 		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -175,6 +176,7 @@ public class Interface {
 		btnNewButton_4.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\colar.png"));
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				textArea.paste();
 			}
 		});
 		btnNewButton_4.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -187,6 +189,7 @@ public class Interface {
 		btnNewButton_5.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\tesouras.png"));
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				textArea.cut();
 			}
 		});
 		btnNewButton_5.setFont(new Font("Tahoma", Font.BOLD, 11));
