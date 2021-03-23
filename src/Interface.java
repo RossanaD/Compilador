@@ -25,6 +25,11 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.ScrollPaneConstants;
 
 public class Interface {
 
@@ -119,15 +124,14 @@ public class Interface {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 900, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frame.getContentPane().setLayout(new MigLayout("", "[146px][10px][1234.00px,grow,right]", "[392px,grow][8px][13.00px,grow][20px]"));
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 150, 530);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
+		frame.getContentPane().add(panel, "cell 0 0,growx,aligny center");
 		
 		JButton btnNewButton = new JButton("novo [ctrl-n]");
 		btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -149,10 +153,10 @@ public class Interface {
              }
         });
 		
+		panel.setLayout(new MigLayout("", "[146px]", "[65px][65px][65px][65px][65px,baseline][65px][65px][65px]"));
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(0, 0, 150, 50);
-		panel.add(btnNewButton);
+		panel.add(btnNewButton, "cell 0 0,grow");
 		
 		JButton btnNewButton_1 = new JButton("abrir [ctrl-o]");
 		btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -164,7 +168,7 @@ public class Interface {
 		});
 		InputMap open = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         open.put(KeyStroke.getKeyStroke("ctrl pressed O"), "open");
-        panel.getActionMap().put("new", new AbstractAction(){
+        panel.getActionMap().put("open", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
             	Abrir();
              }
@@ -172,28 +176,27 @@ public class Interface {
 		
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(Color.WHITE);
-		btnNewButton_1.setBounds(0, 47, 150, 50);
-		panel.add(btnNewButton_1);
+		panel.add(btnNewButton_1, "cell 0 1,grow");
 		
 		JButton btnNewButton_2 = new JButton("salvar [ctrl-s]");
 		btnNewButton_2.setHorizontalAlignment(SwingConstants.LEFT);
 		btnNewButton_2.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\floppy-disk.png"));
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				salvar();			
+				salvar();				
 			}
 		});
 		InputMap save = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        save.put(KeyStroke.getKeyStroke("ctrl pressed N"), "new");
-        panel.getActionMap().put("new", new AbstractAction(){
+        save.put(KeyStroke.getKeyStroke("ctrl pressed S"), "save");
+        panel.getActionMap().put("save", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
             	salvar();
              }
         });
+		
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_2.setBackground(Color.WHITE);
-		btnNewButton_2.setBounds(0, 94, 150, 50);
-		panel.add(btnNewButton_2);
+		panel.add(btnNewButton_2, "cell 0 2,grow");
 		
 		JButton btnNewButton_3 = new JButton("copiar [ctrl-c]");
 		btnNewButton_3.setHorizontalAlignment(SwingConstants.LEFT);
@@ -210,10 +213,10 @@ public class Interface {
                 textArea.copy();
              }
         });
+		
 		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_3.setBackground(Color.WHITE);
-		btnNewButton_3.setBounds(0, 141, 150, 50);
-		panel.add(btnNewButton_3);
+		panel.add(btnNewButton_3, "cell 0 3,grow");
 		
 		JButton btnNewButton_4 = new JButton("colar [ctrl-v]");
 		btnNewButton_4.setHorizontalAlignment(SwingConstants.LEFT);
@@ -223,8 +226,8 @@ public class Interface {
 				textArea.paste();
 			}
 		});
-		InputMap im1 = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        im1.put(KeyStroke.getKeyStroke("ctrl pressed V"), "paste");
+		InputMap paste = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        paste.put(KeyStroke.getKeyStroke("ctrl pressed V"), "paste");
         panel.getActionMap().put("paste", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
                 textArea.paste();
@@ -233,8 +236,7 @@ public class Interface {
 		
 		btnNewButton_4.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_4.setBackground(Color.WHITE);
-		btnNewButton_4.setBounds(0, 188, 150, 50);
-		panel.add(btnNewButton_4);
+		panel.add(btnNewButton_4, "cell 0 4,grow");
 		
 		JButton btnNewButton_5 = new JButton("recortar[ctrl-x]");
 		btnNewButton_5.setHorizontalAlignment(SwingConstants.LEFT);
@@ -244,18 +246,17 @@ public class Interface {
 				textArea.cut();
 			}
 		});
-		InputMap im2 = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        im2.put(KeyStroke.getKeyStroke("ctrl pressed X"), "cut");
+		InputMap cut = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        cut.put(KeyStroke.getKeyStroke("ctrl pressed X"), "cut");
         panel.getActionMap().put("cut", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
                 textArea.cut();
              }
         });
-        
+		
 		btnNewButton_5.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_5.setBackground(Color.WHITE);
-		btnNewButton_5.setBounds(0, 236, 150, 50);
-		panel.add(btnNewButton_5);
+		panel.add(btnNewButton_5, "cell 0 5,grow");
 		
 		JButton btnNewButton_6 = new JButton("compilar [F7]");
 		btnNewButton_6.setHorizontalAlignment(SwingConstants.LEFT);
@@ -275,8 +276,7 @@ public class Interface {
 		
 		btnNewButton_6.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_6.setBackground(Color.WHITE);
-		btnNewButton_6.setBounds(0, 284, 150, 50);
-		panel.add(btnNewButton_6);
+		panel.add(btnNewButton_6, "cell 0 6,grow");
 		
 		JButton btnNewButton_7 = new JButton("equipe [F1]");
 		btnNewButton_7.setHorizontalAlignment(SwingConstants.LEFT);
@@ -287,36 +287,37 @@ public class Interface {
 			}
 		});
 		InputMap equipe = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        im.put(KeyStroke.getKeyStroke("F1"), "team");
+        equipe.put(KeyStroke.getKeyStroke("F1"), "team");
         panel.getActionMap().put("team", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
             	textArea_1.setText("Christian Trisotto Alegri, Eduardo Rebelo Degan, Rossana Ariadna Schumann Dullius");
              }
         });
+		
 		btnNewButton_7.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_7.setBackground(Color.WHITE);
-		btnNewButton_7.setBounds(0, 331, 150, 50);
-		panel.add(btnNewButton_7);
+		panel.add(btnNewButton_7, "cell 0 7,grow");
 		
 		txtPastanomearquivo = new JTextField();
 		txtPastanomearquivo.setFont(new Font("Tahoma", Font.BOLD, 11));
 		txtPastanomearquivo.setText("pasta\\nomeArquivo");
 		txtPastanomearquivo.setBackground(new Color(240, 240, 240));
 		txtPastanomearquivo.setEditable(false);
-		txtPastanomearquivo.setBounds(0, 534, 874, 27);
-		frame.getContentPane().add(txtPastanomearquivo);
+		frame.getContentPane().add(txtPastanomearquivo, "cell 0 3 3 1,growx,aligny top");
 		txtPastanomearquivo.setColumns(10);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(156, 10, 718, 398);
-		frame.getContentPane().add(scrollPane_1);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(scrollPane_1, "cell 2 0,grow");
 		
 		textArea = new JTextArea();
 		scrollPane_1.setViewportView(textArea);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(156, 414, 718, 116);
-		frame.getContentPane().add(scrollPane);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(scrollPane, "cell 2 2,grow");
 		
 		textArea_1 = new JTextArea();
 		textArea_1.setEditable(false);
