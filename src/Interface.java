@@ -3,11 +3,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
@@ -18,7 +20,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.SwingConstants;
 
 public class Interface {
@@ -29,6 +34,63 @@ public class Interface {
 	private JTextArea textArea_1;
 	private File file;
 
+	public void salvar() {
+		if(file == null) {
+			String filename = File.separator+"tmp";
+		    JFileChooser fc = new JFileChooser(new File(filename));
+		    fc.showSaveDialog(frame);
+		    File selFile = fc.getSelectedFile();
+		    FileWriter saida;
+			try {
+				saida = new FileWriter(selFile);
+				BufferedWriter fw = new BufferedWriter(saida);
+				fw.write(textArea.getText());
+				fw.close();
+				txtPastanomearquivo.setText(selFile.getAbsolutePath());
+				textArea_1.setText(null);	
+				file = fc.getSelectedFile();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}	
+
+		}else {
+			 try {
+				FileWriter saida = new FileWriter(file);	
+				BufferedWriter fw = new BufferedWriter(saida);
+				fw.write(textArea.getText());
+				fw.close();
+				textArea_1.setText(null);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	public void Abrir() {
+		JFileChooser jfc = new JFileChooser();
+        int returnVal = jfc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        	file = jfc.getSelectedFile();
+        	txtPastanomearquivo.setText(file.getAbsolutePath());
+            try {
+                FileReader entrada = new FileReader(file);
+                textArea_1.setText(null);
+                int lido = entrada.read();
+                while (lido != -1) {
+					textArea.append(String.valueOf((char)lido));
+					lido = entrada.read();	
+				}
+                entrada.close();
+			} catch (FileNotFoundException fnfe) {
+				JOptionPane.showMessageDialog(frame, "Arquivo de entrada não encontrado");
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(frame, "Erro na leitura do arquivo "+file.getAbsolutePath());
+			}
+        }
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -77,6 +139,16 @@ public class Interface {
 				txtPastanomearquivo.setText("pasta\\nome do arquivo");
 			}
 		});
+		InputMap novo = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        novo.put(KeyStroke.getKeyStroke("ctrl pressed N"), "new");
+        panel.getActionMap().put("new", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+            	textArea.setText(null);
+				textArea_1.setText(null);
+				txtPastanomearquivo.setText("pasta\\nome do arquivo");
+             }
+        });
+		
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton.setBackground(Color.WHITE);
 		btnNewButton.setBounds(0, 0, 150, 50);
@@ -87,28 +159,17 @@ public class Interface {
 		btnNewButton_1.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\pasta.png"));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 JFileChooser jfc = new JFileChooser();
-			        int returnVal = jfc.showOpenDialog(null);
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
-			        	file = jfc.getSelectedFile();
-			        	txtPastanomearquivo.setText(file.getAbsolutePath());
-		                try {
-		                    FileReader entrada = new FileReader(file);
-		                    textArea_1.setText(null);
-		                    int lido = entrada.read();
-		                    while (lido != -1) {
-								textArea.append(String.valueOf((char)lido));
-								lido = entrada.read();	
-							}
-		                    entrada.close();
-						} catch (FileNotFoundException fnfe) {
-							JOptionPane.showMessageDialog(frame, "Arquivo de entrada não encontrado");
-						} catch (IOException ex) {
-							JOptionPane.showMessageDialog(frame, "Erro na leitura do arquivo "+file.getAbsolutePath());
-						}
-			        }
+				 Abrir();
 			}
 		});
+		InputMap open = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        open.put(KeyStroke.getKeyStroke("ctrl pressed O"), "open");
+        panel.getActionMap().put("new", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+            	Abrir();
+             }
+        });
+		
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.setBounds(0, 47, 150, 50);
@@ -119,40 +180,16 @@ public class Interface {
 		btnNewButton_2.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\floppy-disk.png"));
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(file == null) {
-					String filename = File.separator+"tmp";
-				    JFileChooser fc = new JFileChooser(new File(filename));
-				    fc.showSaveDialog(frame);
-				    File selFile = fc.getSelectedFile();
-				    FileWriter saida;
-					try {
-						saida = new FileWriter(selFile);
-						BufferedWriter fw = new BufferedWriter(saida);
-						fw.write(textArea.getText());
-						fw.close();
-						txtPastanomearquivo.setText(selFile.getAbsolutePath());
-						textArea_1.setText(null);	
-						file = fc.getSelectedFile();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}	
-
-				}else {
-					 try {
-						FileWriter saida = new FileWriter(file);	
-						BufferedWriter fw = new BufferedWriter(saida);
-						fw.write(textArea.getText());
-						fw.close();
-						textArea_1.setText(null);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				
+				salvar();			
 			}
 		});
+		InputMap save = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        save.put(KeyStroke.getKeyStroke("ctrl pressed N"), "new");
+        panel.getActionMap().put("new", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+            	salvar();
+             }
+        });
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_2.setBackground(Color.WHITE);
 		btnNewButton_2.setBounds(0, 94, 150, 50);
@@ -166,6 +203,13 @@ public class Interface {
 				textArea.copy();
 			}
 		});
+		InputMap im = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        im.put(KeyStroke.getKeyStroke("ctrl pressed C"), "copy");
+        panel.getActionMap().put("copy", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+                textArea.copy();
+             }
+        });
 		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_3.setBackground(Color.WHITE);
 		btnNewButton_3.setBounds(0, 141, 150, 50);
@@ -179,6 +223,14 @@ public class Interface {
 				textArea.paste();
 			}
 		});
+		InputMap im1 = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        im1.put(KeyStroke.getKeyStroke("ctrl pressed V"), "paste");
+        panel.getActionMap().put("paste", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+                textArea.paste();
+             }
+        });
+		
 		btnNewButton_4.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_4.setBackground(Color.WHITE);
 		btnNewButton_4.setBounds(0, 188, 150, 50);
@@ -192,6 +244,14 @@ public class Interface {
 				textArea.cut();
 			}
 		});
+		InputMap im2 = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        im2.put(KeyStroke.getKeyStroke("ctrl pressed X"), "cut");
+        panel.getActionMap().put("cut", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+                textArea.cut();
+             }
+        });
+        
 		btnNewButton_5.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_5.setBackground(Color.WHITE);
 		btnNewButton_5.setBounds(0, 236, 150, 50);
@@ -205,6 +265,14 @@ public class Interface {
 				textArea_1.setText("compilação de programas ainda não foi implementada");
 			}
 		});
+		InputMap comp = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        comp.put(KeyStroke.getKeyStroke("F7"), "comp");
+        panel.getActionMap().put("comp", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+            	textArea_1.setText("compilação de programas ainda não foi implementada");
+             }
+        });
+		
 		btnNewButton_6.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_6.setBackground(Color.WHITE);
 		btnNewButton_6.setBounds(0, 284, 150, 50);
@@ -218,6 +286,13 @@ public class Interface {
 				textArea_1.setText("Christian Trisotto Alegri, Eduardo Rebelo Degan, Rossana Ariadna Schumann Dullius");
 			}
 		});
+		InputMap equipe = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        im.put(KeyStroke.getKeyStroke("F1"), "team");
+        panel.getActionMap().put("team", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+            	textArea_1.setText("Christian Trisotto Alegri, Eduardo Rebelo Degan, Rossana Ariadna Schumann Dullius");
+             }
+        });
 		btnNewButton_7.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_7.setBackground(Color.WHITE);
 		btnNewButton_7.setBounds(0, 331, 150, 50);
