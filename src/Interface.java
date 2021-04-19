@@ -88,6 +88,7 @@ public class Interface {
 					lido = entrada.read();	
 				}
                 entrada.close();
+                
 			} catch (FileNotFoundException fnfe) {
 				JOptionPane.showMessageDialog(frame, "Arquivo de entrada não encontrado");
 			} catch (IOException ex) {
@@ -163,14 +164,14 @@ public class Interface {
 		btnNewButton_1.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\pasta.png"));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 Abrir();
+				 Abrir();				 
 			}
 		});
 		InputMap open = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         open.put(KeyStroke.getKeyStroke("ctrl pressed O"), "open");
         panel.getActionMap().put("open", new AbstractAction(){
-            public void actionPerformed(ActionEvent e) {
-            	Abrir();
+            public void actionPerformed(ActionEvent e) {          	
+            	Abrir();          	
              }
         });
 		
@@ -263,14 +264,52 @@ public class Interface {
 		btnNewButton_6.setIcon(new ImageIcon("G:\\Workspaceeclipse\\Compilador\\imagens\\compilar.png"));
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textArea_1.setText("compilação de programas ainda não foi implementada");
+				textArea_1.setText(null);
+				Lexico lexico = new Lexico();
+				//...
+				lexico.setInput(textArea.getText());
+				//...			
+				try
+				{
+					Token t = null;
+				    while ( (t = lexico.nextToken()) != null )
+				    {
+				    	textArea_1.append(t.toString()+"\n");
+				    }
+				}
+				catch ( LexicalError e1 )
+				{
+					textArea_1.setText(null);
+					textArea_1.append("Erro linha "+e1.getPosition()+" - "+ e1.getMessage()); 
+					//converter para linha
+					//message olhar ScannerConstants
+				}
 			}
 		});
 		InputMap comp = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         comp.put(KeyStroke.getKeyStroke("F7"), "comp");
         panel.getActionMap().put("comp", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
-            	textArea_1.setText("compilação de programas ainda não foi implementada");
+            	textArea_1.setText(null);
+				Lexico lexico = new Lexico();
+				//...
+				lexico.setInput(textArea.getText());
+				//...			
+				try
+				{
+					Token t = null;
+				    while ( (t = lexico.nextToken()) != null )
+				    {
+				    	textArea_1.append(t.toString()+"\n");
+				    }
+				}
+				catch ( LexicalError e1 )
+				{
+					textArea_1.setText(null);
+					textArea_1.append("Erro na linha "+e1.getPosition()+" - "+ e1.getMessage()); 
+					//converter para linha
+					//message olhar ScannerConstants
+				}
              }
         });
 		
