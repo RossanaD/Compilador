@@ -50,9 +50,9 @@ public class Lexico implements Constants
             isComentarioBloco(lastState, state);
             isComentarioLinha(lastState, state);
 
-            if (state < 0)
+            if (state < 0)            	
                 break;
-
+            
             else
             {
                 if (tokenForState(state) >= 0)
@@ -62,6 +62,7 @@ public class Lexico implements Constants
                 }
             }
         }
+        
         if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {   
         	//verifica se é comentario bloco
         	if(auxEstado == 38) {
@@ -177,4 +178,5 @@ public class Lexico implements Constants
     public String getSimbolo() {
     	return simbolo;
     }
+
 }
