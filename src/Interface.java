@@ -13,6 +13,7 @@ import javax.swing.KeyStroke;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,16 +80,18 @@ public class Interface {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
         	file = jfc.getSelectedFile();
         	txtPastanomearquivo.setText(file.getAbsolutePath());
-            try {
-                FileReader entrada = new FileReader(file);
+        	try {
+                BufferedReader entrada = null;
+                entrada = new BufferedReader(new FileReader(file));
                 textArea_1.setText(null);
-                int lido = entrada.read();
-                while (lido != -1) {
-					textArea.append(String.valueOf((char)lido));
-					lido = entrada.read();	
+                String lido = entrada.readLine();
+                while (lido != null) {
+                	textArea.append(lido+"\n");
+                	lido = entrada.readLine();
+					
 				}
-                entrada.close();
-                
+                textArea.append(lido);
+                entrada.close();                
 			} catch (FileNotFoundException fnfe) {
 				JOptionPane.showMessageDialog(frame, "Arquivo de entrada não encontrado");
 			} catch (IOException ex) {
