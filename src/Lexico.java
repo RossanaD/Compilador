@@ -56,7 +56,8 @@ public class Lexico implements Constants
         }
         if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {
         	getLinha();
-        	throw new LexicalError(SCANNER_ERROR[lastState], linha);
+        	String lexe = input.substring(start);
+        	throw new LexicalError(SCANNER_ERROR[lastState], linha, lexe);
         }
             
         position = end;

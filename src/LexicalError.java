@@ -1,8 +1,8 @@
 public class LexicalError extends AnalysisError
 {
-    public LexicalError(String msg, int position)
+    public LexicalError(String msg, int position, String lex)
 	 {
-        super(msg, position);
+        super(msg, position, lex);
     }
 
     public LexicalError(String msg)
