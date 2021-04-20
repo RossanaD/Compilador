@@ -265,6 +265,7 @@ public class Interface {
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textArea_1.setText(null);
+				boolean erro = false;
 				Lexico lexico = new Lexico();
 				//...
 				lexico.setInput(textArea.getText());
@@ -274,15 +275,19 @@ public class Interface {
 					Token t = null;
 				    while ( (t = lexico.nextToken()) != null )
 				    {
-				    	textArea_1.append(t.toString()+"\n");
+				    	textArea_1.append(t.toString()+"\n");				    	
 				    }
 				}
 				catch ( LexicalError e1 )
 				{
 					textArea_1.setText(null);
+					erro = true;
 					textArea_1.append("Erro linha "+e1.getPosition()+" - "+ e1.getMessage()); 
 					//converter para linha
 					//message olhar ScannerConstants
+				}
+				if(!erro) {
+					textArea_1.append("programa compilado com sucesso");
 				}
 			}
 		});
