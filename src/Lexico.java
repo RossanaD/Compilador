@@ -5,6 +5,8 @@ public class Lexico implements Constants
     private String input;
     private int linha = 1;
     private char c;
+    private int auxEstado;
+    private int count;
 
     public Lexico()
     {
@@ -43,6 +45,7 @@ public class Lexico implements Constants
         {
             lastState = state;
             state = nextState(nextChar(), state);
+            auxEstado = lastState;
             isComentarioBloco(lastState, state);
             isComentarioLinha(lastState, state);
 
@@ -58,7 +61,10 @@ public class Lexico implements Constants
                 }
             }
         }
-        if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {
+        if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {       
+        	if(auxEstado == 38) {
+        		linha = linha-count;
+        	}
         	getLinha();
         	throw new LexicalError(SCANNER_ERROR[lastState], linha);
         }
@@ -152,6 +158,7 @@ public class Lexico implements Constants
 
     public void isComentarioBloco(int estadoultimo, int estadoinci) {
     	if(estadoinci == 21 || estadoultimo == 47 || ((estadoinci == 38) && (estadoinci != estadoultimo))) {
+    		count++;
     		linha++;
     	}
     }
