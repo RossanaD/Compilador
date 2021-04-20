@@ -1,8 +1,8 @@
 public class SyntaticError extends AnalysisError
 {
-    public SyntaticError(String msg, int position)
+    public SyntaticError(String msg, int position, String lex)
 	 {
-        super(msg, position);
+        super(msg, position, lex);
     }
 
     public SyntaticError(String msg)
