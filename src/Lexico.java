@@ -42,7 +42,9 @@ public class Lexico implements Constants
         while (hasInput())
         {
             lastState = state;
-            state = nextState(nextChar(), state);  
+            state = nextState(nextChar(), state);
+            isComentarioBloco(lastState, state);
+            isComentarioLinha(lastState, state);
 
             if (state < 0)
                 break;
@@ -148,4 +150,15 @@ public class Lexico implements Constants
     	return linha;
     }
 
+    public void isComentarioBloco(int estadoultimo, int estadoinci) {
+    	if(estadoinci == 21 || estadoultimo == 47 || ((estadoinci == 38) && (estadoinci != estadoultimo))) {
+    		linha++;
+    	}
+    }
+    
+    public void isComentarioLinha(int estadoFinal, int estadoInicial) {
+    	if(estadoFinal == 3 && estadoInicial == -1) {
+    		linha++;
+    	}
+    }
 }
