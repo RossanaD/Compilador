@@ -280,7 +280,7 @@ public class Interface {
 				catch ( LexicalError e1 )
 				{
 					textArea_1.setText(null);
-					textArea_1.append("Erro linha "+e1.getPosition()+" - "+e1.getLexema()+" "+ e1.getMessage()); 
+					textArea_1.append("Erro linha "+e1.getPosition()+" - "+ e1.getMessage()); 
 					//converter para linha
 					//message olhar ScannerConstants
 				}

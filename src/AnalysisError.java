@@ -3,11 +3,10 @@ public class AnalysisError extends Exception
     private int position;
     private String lexema;
 
-    public AnalysisError(String msg, int position, String lexema)
+    public AnalysisError(String msg, int position)
     {
         super(msg);
         this.position = position;
-        setLexema(lexema);
     }
 
     public AnalysisError(String msg)
@@ -25,17 +24,5 @@ public class AnalysisError extends Exception
     {
         return super.toString() + ", @ "+position;
     }
-
-	public String getLexema() {
-		return lexema;
-	}
-
-	public void setLexema(String lexema) {
-		if(lexema.length() != 1) {
-			this.lexema = "";
-		}else {
-			this.lexema = lexema;
-		}		
-	}
     
 }
