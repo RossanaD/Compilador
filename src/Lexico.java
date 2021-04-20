@@ -1,8 +1,10 @@
+
 public class Lexico implements Constants
 {
     private int position;
     private String input;
-    private int linha;
+    private int linha = 1;
+    private char c;
 
     public Lexico()
     {
@@ -40,7 +42,7 @@ public class Lexico implements Constants
         while (hasInput())
         {
             lastState = state;
-            state = nextState(nextChar(), state);
+            state = nextState(nextChar(), state);  
 
             if (state < 0)
                 break;
@@ -66,9 +68,9 @@ public class Lexico implements Constants
         	return nextToken();
         }                  
         else
-        {
-        	getLinha();
-            String lexeme = input.substring(start, end);
+        {       	
+            String lexeme = input.substring(start, end);         
+            getLinha();
             token = lookupToken(token, lexeme);
             return new Token(token, lexeme, linha);
         }
@@ -131,18 +133,18 @@ public class Lexico implements Constants
     private char nextChar()
     {
         if (hasInput())
-            return input.charAt(position++);
+            return input.charAt(position++);     
+       	
         else
             return (char) -1;
     }
     
     public int getLinha() {
-    	if(position == 0) {
-    		return linha;
+    	
+    	if(position > 0 && c == '\n' ) {
+    		return linha++;
     	}
-    	if(position > 0) {
-    		linha++;
-    	}
+    	c = nextChar();
     	return linha;
     }
 
