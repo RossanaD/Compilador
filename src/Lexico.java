@@ -7,6 +7,7 @@ public class Lexico implements Constants
     private char c;
     private int auxEstado;
     private int count;
+    private String simbolo;
 
     public Lexico()
     {
@@ -61,9 +62,13 @@ public class Lexico implements Constants
                 }
             }
         }
-        if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {       
+        if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {   
+        	//verifica se é comentario bloco
         	if(auxEstado == 38) {
         		linha = linha-count;
+        	}
+        	if(state == -1 || state == 4) {
+        		simbolo = input.substring(start, start+1);
         	}
         	getLinha();
         	throw new LexicalError(SCANNER_ERROR[lastState], linha);
@@ -167,5 +172,9 @@ public class Lexico implements Constants
     	if(estadoFinal == 3 && estadoInicial == -1) {
     		linha++;
     	}
+    }
+    
+    public String getSimbolo() {
+    	return simbolo;
     }
 }

@@ -285,7 +285,13 @@ public class Interface {
 				{
 					textArea_1.setText(null);
 					erro = true;
-					textArea_1.append("Erro linha "+e1.getPosition()+" - "+ e1.getMessage()); 
+					String simbolo;
+					if(lexico.getSimbolo() == null) {
+						simbolo = "";
+					}else {
+						simbolo = lexico.getSimbolo();
+					}
+					textArea_1.append("Erro linha "+e1.getPosition()+" - "+simbolo+" "+ e1.getMessage()); 
 					//converter para linha
 					//message olhar ScannerConstants
 				}
