@@ -79,7 +79,6 @@ public class Lexico implements Constants
 
         int token = tokenForState(endState);
         if (token == 0) {
-        	getLinha();
         	return nextToken();
         }                  
         else
@@ -155,11 +154,10 @@ public class Lexico implements Constants
     }
     
     public int getLinha() {
-    	if(c == '\n' && nextChar() == '\n') {
+    	
+    	if(position > 0 && c == '\n' ) {
     		return linha++;
-    	}else if(position > 0 && c == '\n' ) {
-    		return linha++;
-    	}   	
+    	}
     	c = nextChar();
     	return linha;
     }
