@@ -104,4 +104,10 @@ public class Sintatico implements Constants
         while ( ! step() )
             ;
     }
+
+	public String getCurrentToken() {
+		String str = "encontrado "+currentToken.getLexeme();
+		return str;
+	}   
+    
 }

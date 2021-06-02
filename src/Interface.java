@@ -295,7 +295,10 @@ public class Interface {
 					//message olhar ScannerConstants
 				}
 				catch( SyntaticError se) {
+					textArea_1.setText(null);
 					erro = true;
+					textArea_1.setText("Erro na linha "+se.getPosition()+" - "
+					+sintatico.getCurrentToken()+" "+se.getMessage());
 				}
 				catch( SemanticError semaE) {
 					erro = true;
@@ -310,24 +313,46 @@ public class Interface {
         panel.getActionMap().put("comp", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
             	textArea_1.setText(null);
+				boolean erro = false;
 				Lexico lexico = new Lexico();
+				Sintatico sintatico = new Sintatico();
+				Semantico semantico = new Semantico();
 				//...
 				lexico.setInput(textArea.getText());
 				//...			
 				try
 				{
-					Token t = null;
-				    while ( (t = lexico.nextToken()) != null )
-				    {
-				    	textArea_1.append(t.toString()+"\n");
-				    }
+					/*
+					 * Token t = null; while ( (t = lexico.nextToken()) != null ) {
+					 * textArea_1.append(t.toString()+"\n"); }
+					 */
+					sintatico.parse(lexico, semantico);
 				}
 				catch ( LexicalError e1 )
 				{
 					textArea_1.setText(null);
-					textArea_1.append("Erro na linha "+e1.getPosition()+" - "+ e1.getMessage()); 
+					erro = true;
+					String simbolo;
+					if(lexico.getSimbolo() == null) {
+						simbolo = "";
+					}else {
+						simbolo = lexico.getSimbolo();
+					}
+					textArea_1.append("Erro linha "+e1.getPosition()+" - "+simbolo+" "+ e1.getMessage()); 
 					//converter para linha
 					//message olhar ScannerConstants
+				}
+				catch( SyntaticError se) {
+					textArea_1.setText(null);
+					erro = true;
+					textArea_1.setText("Erro na linha "+se.getPosition()+" - "
+					+sintatico.getCurrentToken()+" "+se.getMessage());
+				}
+				catch( SemanticError semaE) {
+					erro = true;
+				}
+				if(!erro) {
+					textArea_1.append("programa compilado com sucesso");
 				}
              }
         });
