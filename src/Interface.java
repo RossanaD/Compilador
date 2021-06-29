@@ -290,7 +290,7 @@ public class Interface {
 					}else {
 						simbolo = lexico.getSimbolo();
 					}
-					textArea_1.append("Erro linha "+e1.getPosition()+" - "+simbolo+" "+ e1.getMessage()); 
+					textArea_1.append("Erro na linha "+e1.getPosition()+" - "+simbolo+" "+ e1.getMessage()); 
 					//converter para linha
 					//message olhar ScannerConstants
 				}
@@ -338,7 +338,7 @@ public class Interface {
 					}else {
 						simbolo = lexico.getSimbolo();
 					}
-					textArea_1.append("Erro linha "+e1.getPosition()+" - "+simbolo+" "+ e1.getMessage()); 
+					textArea_1.append("Erro na linha "+e1.getPosition()+" - "+simbolo+" "+ e1.getMessage()); 
 					//converter para linha
 					//message olhar ScannerConstants
 				}

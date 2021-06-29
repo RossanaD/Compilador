@@ -1,6 +1,6 @@
 public interface Constants extends ScannerConstants, ParserConstants
 {
-    int EPSILON  = 0;
+	int EPSILON  = 0;
     int DOLLAR   = 1;
 
     int t_id = 2;
