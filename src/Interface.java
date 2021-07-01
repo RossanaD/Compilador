@@ -302,7 +302,7 @@ public class Interface {
 				}
 				catch( SemanticError semaE) {
 					erro = true;
-					System.out.println(semaE.getMessage());
+					textArea_1.setText("Erro na linha "+semaE.getPosition()+" - "+semaE.getMessage());
 				}
 				if(!erro) {
 					textArea_1.append("programa compilado com sucesso");
@@ -351,6 +351,7 @@ public class Interface {
 				}
 				catch( SemanticError semaE) {
 					erro = true;
+					textArea_1.setText("Erro na linha "+semaE.getPosition()+" - "+semaE.getMessage());
 				}
 				if(!erro) {
 					textArea_1.append("programa compilado com sucesso");

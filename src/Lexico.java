@@ -9,7 +9,10 @@ public class Lexico implements Constants
     private String[] array;
     private int idx = 0;
 
-
+    public int getLinha() {
+    	return linha;
+    }
+    
     public Lexico()
     {
         this("");
