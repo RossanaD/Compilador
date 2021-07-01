@@ -19,9 +19,11 @@ public class Semantico<T> implements Constants {
 
 	List<String> lista_id = new ArrayList<>();
 
-	Stack<T> pilha_rotulos = new Stack<>();
+	Stack<String> pilha_rotulos = new Stack<>();
 	
 	List<String> tabela_simbolos = new ArrayList<>();
+	
+	int incremento = 0;
 
 	public void executeAction(int action, Token token) throws SemanticError {
 //		System.out.println("Ação #"+action+", Token: "+token);
@@ -72,7 +74,7 @@ public class Semantico<T> implements Constants {
 			acao15();
 			break;
 		case 16:
-			acao16(token);
+			acao16();
 			break;
 		case 17:
 			acao17(token);
@@ -141,7 +143,7 @@ public class Semantico<T> implements Constants {
 		if (tipo1 != tipo2) {
 			throw new SemanticError("tipos incompatíveis em expressão aritmética");
 		}
-		if (tipo1 == "float64" || tipo2 == "float64") {
+		if (tipo1.equals("float64") || tipo2.equals("float64")) {
 			pilha_tipos.push("float64");
 		} else {
 			pilha_tipos.push("int64");
@@ -155,7 +157,7 @@ public class Semantico<T> implements Constants {
 		if (tipo1 != tipo2) {
 			throw new SemanticError("tipos incompatíveis em expressão aritmética");
 		}
-		if (tipo1 == "float64" || tipo2 == "float64") {
+		if (tipo1.equals("float64") || tipo2.equals("float64")) {
 			pilha_tipos.push("float64");
 		} else {
 			pilha_tipos.push("int64");
@@ -165,14 +167,15 @@ public class Semantico<T> implements Constants {
 
 	private void acao03() throws SemanticError {
 		String tipo1 = pilha_tipos.pop();
-		String tipo2 = pilha_tipos.pop();
-		if (tipo1 != tipo2) {
+		String tipo2 = pilha_tipos.pop();		
+		if((tipo1.equals("string") || tipo1.equals("char")) 
+				|| (tipo2.equals("string") || tipo2.equals("char"))) {
 			throw new SemanticError("tipos incompatíveis em expressão aritmética");
 		}
-		if (tipo1 == "float64" || tipo2 == "float64") {
+		if (tipo1.equals("float64") || tipo2.equals("float64")) {
 			pilha_tipos.push("float64");
 		} else {
-			pilha_tipos.push("float64");
+			pilha_tipos.push("int64");
 		}
 		codigo.add("mul\n");
 	}
@@ -202,7 +205,7 @@ public class Semantico<T> implements Constants {
 
 	private void acao07() throws SemanticError {
 		String tipo1 = pilha_tipos.pop();
-		if (tipo1 == "float64" || tipo1 == "int64") {
+		if (tipo1.equals("float64") || tipo1.equals("int64")) {
 			pilha_tipos.push(tipo1);
 		} else {
 			throw new SemanticError("tipo incompatível em expressão aritmética");
@@ -211,7 +214,7 @@ public class Semantico<T> implements Constants {
 
 	private void acao08() throws SemanticError {
 		String tipo1 = pilha_tipos.pop();
-		if (tipo1 == "float64" || tipo1 == "int64") {
+		if (tipo1.equals("float64") || tipo1.equals("int64")) {
 			pilha_tipos.push(tipo1);
 		} else {
 			throw new SemanticError("tipo incompatível em expressão aritmética");
@@ -226,8 +229,24 @@ public class Semantico<T> implements Constants {
 		operador = token.getLexeme();
 	}
 
-	private void acao10() {
-
+	private void acao10() throws SemanticError {
+		String tipo1 = pilha_tipos.pop();
+		String tipo2 = pilha_tipos.pop();
+		if((tipo1.equals("int64") && tipo2.equals("int64")) 
+				|| (tipo1.equals("float64") && tipo2.equals("float64"))
+				|| (tipo1.equals("string") && tipo2.equals("string"))
+				|| (tipo1.equals("int64") && tipo2.equals("float64"))) {
+			pilha_tipos.push("bool");
+		}else {
+			throw new SemanticError("tipos incompatíveis em expressão relacional");
+		}
+		if(operador.equals(">")) {
+			codigo.add("cgt\n");
+		}else if(operador.equals("<")) {
+			codigo.add("clt\n");
+		}else if(operador.equals("==")) {
+			codigo.add("ceq\n");
+		}
 	}
 
 	private void acao11() {
@@ -242,7 +261,7 @@ public class Semantico<T> implements Constants {
 
 	private void acao13() throws SemanticError {
 		String tipo = pilha_tipos.pop();
-		if (tipo == "bool") {
+		if (tipo.equals("bool")) {
 			pilha_tipos.push("bool");
 		} else {
 			throw new SemanticError("tipo incompatível em expressão lógica");
@@ -254,6 +273,9 @@ public class Semantico<T> implements Constants {
 
 	private void acao14() {
 		String tipo = pilha_tipos.pop();
+		if(tipo.equals("int64")) {
+			codigo.add("conv.i8\n");
+		}
 		codigo.add("call void [mscorlib]System.Console::Write(" + tipo + ")\n");
 	}
 
@@ -265,13 +287,14 @@ public class Semantico<T> implements Constants {
 
 	}
 
-	private void acao16(Token token) {
+	private void acao16() {
 		String str = "	ret\n" + "	}\n" + "}";
 		codigo.add(str);
 	}
 
 	private void acao17(Token token) {
-		codigo.add("ldstr" + token.getLexeme().replace("\'", "\"") + "\n");
+		pilha_tipos.add("string");
+		codigo.add("ldstr " + token.getLexeme().replace("\'", "\"") + "\n");
 	}
 
 	private void acao18() {
@@ -284,14 +307,14 @@ public class Semantico<T> implements Constants {
 
 	private void acao20(Token token) {
 		String lexeme = token.getLexeme();
-		if (lexeme == "\t") {
+		if (lexeme.equals("\\t")) {
 			codigo.add("ldstr \"" + lexeme + "\" \n");
-		} else if (lexeme == "\n") {
+		} else if (lexeme.equals("\\n")) {
 			codigo.add("ldstr \"" + lexeme + "\" \n");
 		} else {
 			codigo.add("ldstr \" \" \n");
 		}
-
+		pilha_tipos.add("string");
 	}
 
 	private void acao21(Token token) throws SemanticError {
@@ -316,28 +339,28 @@ public class Semantico<T> implements Constants {
 			}
 			tabela_simbolos.add(id+";"+tipo);
 			codigo.add(".locals ("+tipo+" "+id+")\n");
-			if(tipo == "int64") {
+			if(tipo.equals("int64")) {
 				codigo.add("ldc.i8 "+valor_inicial.replace("_", "")+"\n");
 			}
-			if(tipo == "float64") {
+			if(tipo.equals("float64")) {
 				codigo.add("ldc.r8 "+valor_inicial.replace("_","")+"\n");
 			}
-			if(tipo == "char") {
-				if(valor_inicial == "\t") {
+			if(tipo.equals("char")) {
+				if(valor_inicial.equals("\\t")) {
 					codigo.add("ldstr \"" + valor_inicial + "\" \n");
-				}else if (valor_inicial == "\n") {
+				}else if (valor_inicial.equals("\\n")) {
 					codigo.add("ldstr \"" + valor_inicial + "\" \n");
 				}else {
 					codigo.add("ldstr \" \" \n");
 				}				
 			}
-			if(tipo == "string") {
+			if(tipo.equals("string")) {
 				codigo.add("ldstr "+valor_inicial.replace("\'", "\"")+"\n");
 			}
-			if(tipo == "bool" && valor_inicial == "true") {
+			if(tipo.equals("bool") && valor_inicial.equals("true")) {
 				codigo.add("ldc.i4.1\n");
 			}
-			if(tipo == "bool" && valor_inicial == "false") {
+			if(tipo.equals("bool") && valor_inicial.equals("false")) {
 				codigo.add("ldc.i4.0\n");
 			}
 			
@@ -363,7 +386,19 @@ public class Semantico<T> implements Constants {
 	}
 
 	private void acao23() {
-
+		String tipo = "";
+		for (String simbolos : tabela_simbolos) {
+			if(simbolos.contains(identificador)) {
+				String[] array = simbolos.split(";");
+				tipo = array[1];
+				break;
+			}
+		}
+		
+		if(tipo.equals("int64")) {
+			codigo.add("conv.i8\n");
+		}
+		codigo.add("stloc "+identificador+"\n");
 	}
 
 	private void acao24() throws SemanticError {
@@ -382,14 +417,14 @@ public class Semantico<T> implements Constants {
 				throw new SemanticError("identificador não declarado");
 			
 			codigo.add("call string [mscorlib]System.Console::ReadLine()\n");
-			if(tipo == "int64") {
+			if(tipo.equals("int64")) {
 				codigo.add("call int64 [mscorlib]System.Int64::Parse(string)\n");
-			}else if(tipo == "float64") {
+			}else if(tipo.equals("float64")) {
 				codigo.add("call float64 [mscorlib]System.Double::Parse(string)\n");
-			}else if(tipo == "bool") {
+			}else if(tipo.equals("bool")) {
 				codigo.add("call bool [mscorlib]System.Boolean::Parse(string)\n");
 			}
-			codigo.add("stloc"+id+"\n");
+			codigo.add("stloc "+id+"\n");
 		}
 	}
 
@@ -398,31 +433,51 @@ public class Semantico<T> implements Constants {
 	}
 
 	private void acao26() {
-
+		incremento++;
+		String rotulo = "r"+incremento;
+		pilha_rotulos.push(rotulo);
+		codigo.add("brfalse r"+incremento+"\n");
 	}
 
 	private void acao27() {
-
+		incremento++;
+		String rotulo = "r"+incremento;
+		codigo.add("br "+rotulo+"\n");
+		codigo.add(pilha_rotulos.pop()+":\n");
+		pilha_rotulos.push(rotulo);
 	}
 
 	private void acao28() {
-
+		String rotulo = pilha_rotulos.pop();
+		codigo.add(rotulo+":\n");
 	}
 
 	private void acao29() {
-
+		incremento++;
+		String rotulo = "r"+incremento;
+		pilha_rotulos.push(rotulo);
+		codigo.add(rotulo+":\n");
 	}
 
 	private void acao30() {
-
+		incremento++;
+		String rotulo = "r"+incremento;
+		codigo.add("brfalse "+rotulo+"\n");
+		pilha_rotulos.add(rotulo);
 	}
 
 	private void acao31() {
-
+		String rotulo1 = pilha_rotulos.pop();
+		String rotulo2 = pilha_rotulos.pop();
+		codigo.add("br "+rotulo2+"\n");
+		codigo.add(rotulo1+":\n");
 	}
 
 	private void acao32() {
-
+		incremento++;
+		String rotulo = "r"+incremento;
+		codigo.add("brtrue "+rotulo+"\n");
+		pilha_rotulos.push(rotulo);
 	}
 
 	private void acao33(Token token) throws SemanticError {
@@ -440,10 +495,10 @@ public class Semantico<T> implements Constants {
 		if(achou == false)
 			throw new SemanticError("identificador não declarado");
 		
+		codigo.add("ldloc "+id+"\n");
 		pilha_tipos.add(tipo);
-		if(tipo == "int64") {
+		if(tipo.equals("int64")) {
 			codigo.add("conv.r8\n");
-		}
-		codigo.add("ldloc"+id+"\n");
+		}		
 	}
 }
