@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -306,6 +307,22 @@ public class Interface {
 				}
 				if(!erro) {
 					textArea_1.append("programa compilado com sucesso");
+					ArrayList<String> codigo = semantico.getCodigo();
+					try {
+						String fi = file.getPath();
+						String caminho = fi.substring(0,fi.lastIndexOf('\\'));
+						String nome = fi.substring(fi.lastIndexOf('\\')+1);
+						String novoNome = nome.substring(0, nome.lastIndexOf('.'))+".il";
+						FileWriter saida = new FileWriter(caminho+"\\"+novoNome);	
+						BufferedWriter fw = new BufferedWriter(saida);
+						for (String string : codigo) {
+							fw.write(string);
+						}						
+						fw.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}					
 				}
 			}
 		});
@@ -355,6 +372,22 @@ public class Interface {
 				}
 				if(!erro) {
 					textArea_1.append("programa compilado com sucesso");
+					ArrayList<String> codigo = semantico.getCodigo();
+					try {
+						String fi = file.getPath();
+						String caminho = fi.substring(0,fi.lastIndexOf('\\'));
+						String nome = fi.substring(fi.lastIndexOf('\\')+1);
+						String novoNome = nome.substring(0, nome.lastIndexOf('.'))+".il";
+						FileWriter saida = new FileWriter(caminho+"\\"+novoNome);	
+						BufferedWriter fw = new BufferedWriter(saida);
+						for (String string : codigo) {
+							fw.write(string);
+						}						
+						fw.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}				
 				}
              }
         });

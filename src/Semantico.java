@@ -9,7 +9,7 @@ public class Semantico<T> implements Constants {
 	// pela ação #9, para uso posterior na ação #10.
 	String operador = "";
 	// código: usado para armazenar o código objeto gerado.
-	List<String> codigo = new ArrayList<>();
+	private ArrayList<String> codigo = new ArrayList<>();
 	// pilha_tipos (inicialmente vazia): usada para determinar o tipo de uma
 	// expressão durante a
 	// compilação do programa, podendo ser: ....
@@ -17,14 +17,18 @@ public class Semantico<T> implements Constants {
 
 	String identificador = "";
 
-	List<String> lista_id = new ArrayList<>();
+	ArrayList<String> lista_id = new ArrayList<>();
 
 	Stack<String> pilha_rotulos = new Stack<>();
 	
 	List<String> tabela_simbolos = new ArrayList<>();
 	
 	int incremento = 0;
-
+	
+	public ArrayList<String> getCodigo(){
+		return codigo;
+	}
+	
 	public void executeAction(int action, Token token, int linha) throws SemanticError {
 //		System.out.println("Ação #"+action+", Token: "+token);
 		switch (action) {
@@ -80,10 +84,10 @@ public class Semantico<T> implements Constants {
 			acao17(token);
 			break;
 		case 18:
-			acao18();
+			acao18(linha);
 			break;
 		case 19:
-			acao19();
+			acao19(linha);
 			break;
 		case 20:
 			acao20(token);
@@ -246,6 +250,8 @@ public class Semantico<T> implements Constants {
 			codigo.add("clt\n");
 		}else if(operador.equals("==")) {
 			codigo.add("ceq\n");
+		}else if(operador.equals("!=")) {
+			codigo.add("ceq\n");
 		}
 	}
 
@@ -288,7 +294,7 @@ public class Semantico<T> implements Constants {
 	}
 
 	private void acao16() {
-		String str = "	ret\n" + "	}\n" + "}";
+		String str = "ret\n" + " }\n" + "}\n";
 		codigo.add(str);
 	}
 
@@ -297,12 +303,24 @@ public class Semantico<T> implements Constants {
 		codigo.add("ldstr " + token.getLexeme().replace("\'", "\"") + "\n");
 	}
 
-	private void acao18() {
-
+	private void acao18(int linha) throws SemanticError {
+		String tipo1 = pilha_tipos.pop();
+		String tipo2 = pilha_tipos.pop();
+		if(!tipo1.equals("bool") && !tipo2.equals("bool")) {
+			throw new SemanticError("tipo incompatível em expressão lógica", linha);
+		}
+		pilha_tipos.push("bool");
+		codigo.add("and\n");
 	}
 
-	private void acao19() {
-
+	private void acao19(int linha) throws SemanticError {
+		String tipo1 = pilha_tipos.pop();
+		String tipo2 = pilha_tipos.pop();
+		if(!tipo1.equals("bool") && !tipo2.equals("bool")) {
+			throw new SemanticError("tipo incompatível em expressão lógica", linha);
+		}
+		pilha_tipos.push("bool");
+		codigo.add("or\n");
 	}
 
 	private void acao20(Token token) {
